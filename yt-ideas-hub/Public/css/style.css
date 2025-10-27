@@ -69,3 +69,112 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #4cae4c;
 }
+
+
+
+/* Style général pour le badge de statut */
+.status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px; /* Pour un look de "badge" */
+    font-weight: bold;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    margin-left: 5px;
+}
+
+/* 1. Statut Brouillon (Draft) - Couleur neutre/gris */
+.status-Draft {
+    background-color: #bdc3c7; /* Gris clair */
+    color: #2c3e50; /* Texte foncé */
+}
+
+/* 2. Statut En Cours (In Progress) - Couleur d'alerte/jaune */
+.status-InProgress {
+    background-color: #f1c40f; /* Jaune/Ambre */
+    color: #000000;
+}
+
+/* 3. Statut Publié (Published) - Couleur de succès/vert */
+.status-Published {
+    background-color: #27ae60; /* Vert émeraude */
+    color: white;
+}
+
+
+/* 1. Conteneur des actions : utilise Flexbox pour aligner horizontalement */
+.idea-actions {
+    display: flex;
+    gap: 10px; /* Ajoute un espace entre les boutons */
+    margin-top: 15px; /* Sépare les boutons du contenu de l'idée */
+}
+
+/* 2. Style de base pour tous les boutons d'action (lien ou soumission) */
+.btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none; /* Enlève le soulignement sur le lien <a> */
+    display: inline-block;
+    transition: background-color 0.2s;
+}
+
+/* 3. Style spécifique pour le bouton Modifier (vert ou bleu, par exemple) */
+.btn-edit {
+    background-color: #3498db; /* Bleu */
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #2980b9;
+}
+
+/* 4. Style spécifique pour le bouton Supprimer (rouge pour l'alerte) */
+.btn-delete {
+    background-color: #e74c3c; /* Rouge */
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
+}
+
+/* 5. S'assurer que le formulaire ne brise pas l'alignement flex */
+.idea-actions form {
+    margin: 0;
+    padding: 0;
+}
+
+
+/* 1. Style pour la Grille (pour un affichage en colonnes) */
+.ideas-grid {
+    display: grid;
+    /* Crée des colonnes qui ne font jamais moins de 300px de large */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px; /* Espace entre les cartes */
+}
+
+/* 2. Style de la carte individuelle (remplace le style inline précédent) */
+.idea-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Ombre légère pour effet de profondeur */
+    transition: transform 0.2s;
+}
+
+.idea-card:hover {
+    transform: translateY(-3px); /* Effet au survol pour montrer l'interactivité */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.idea-card h3 {
+    color: #34495e;
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 5px;
+}

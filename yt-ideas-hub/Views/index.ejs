@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <link rel="stylesheet" href="/css/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <h1><%= pageTitle %></h1>
 
     <section>
-        <h2>Ajoute ta nouvelle idée ☝️🤓</h2>
+        <h2>Ajouter une Nouvelle Idée</h2>
         <form action="/idea" method="POST">
             <div>
                 <label for="title">Titre de l'Idée :</label>
@@ -23,7 +23,7 @@
             </div>
 
             <div>
-                <label for="category">Catégorie (vidéos longue yt, Blog, etc.) :</label>
+                <label for="category">Catégorie (YT, Blog, etc.) :</label>
                 <input type="text" id="category" name="category" value="YouTube">
             </div>
 
@@ -39,26 +39,36 @@
         <% if (ideas.length === 0) { %>
             <p>Aucune idée trouvée pour l'instant. Ajoutez-en une pour commencer !</p>
         <% } else { %>
-            <% ideas.forEach(idea => { %>
-                <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-                    <h3><%= idea.title %></h3>
-                    <p><strong>Description:</strong> <%= idea.description %></p>
-                    <p><strong>Statut:</strong> <%= idea.status || 'N/A' %></p>
-                    <p><strong>Date:</strong> <%= new Date(idea.createdAt).toLocaleDateString('fr-FR') %></p>
-                    
-                    <p>
-    <a href="/edit/<%= idea._id %>" style="margin-right: 15px;">
-        <button type="button">Modifier</button>
-    </a>
-    
-    <form action="/idea/delete/<%= idea._id %>" method="POST" style="display:inline;">
-        <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette idée ?');">
-            Supprimer
-        </button>
-    </form>
-</p>
-                </div>
-            <% }) %>
+            <div class="ideas-grid">
+                <% ideas.forEach(idea => { %>
+                    <div class="idea-card">
+                        <h3><%= idea.title %></h3>
+                        <p>
+                            <strong>Statut:</strong> 
+                            <span class="status-badge status-<%= idea.status.replace(/ /g, '') %>">
+                                <%= idea.status %>
+                            </span>
+                        </p>
+                        <p><strong>Description:</strong> <%= idea.description %></p>
+                        <p>
+                            <strong>Catégorie:</strong> <%= idea.category || 'N/A' %> | 
+                            <strong>Date:</strong> <%= new Date(idea.createdAt).toLocaleDateString('fr-FR') %>
+                        </p>
+                        
+                        <div class="idea-actions">
+                            <a href="/edit/<%= idea._id %>" class="btn btn-edit">
+                                Modifier
+                            </a>
+                            
+                            <form action="/idea/delete/<%= idea._id %>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette idée ?');">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
         <% } %>
     </section>
 
