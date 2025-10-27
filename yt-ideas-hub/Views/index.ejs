@@ -1,12 +1,66 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <link rel="stylesheet" href="/css/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= pageTitle %></title>
-    <link rel="stylesheet" href="/css/style.css"> </head>
+</head>
 <body>
-    <h1>Bienvenue dans <%= pageTitle %>!</h1>
-    <p>Le serveur est prêt. Nous allons maintenant ajouter l'interface de création d'idées.</p>
+    <h1><%= pageTitle %></h1>
+
+    <section>
+        <h2>Ajoute ta nouvelle idée ☝️🤓</h2>
+        <form action="/idea" method="POST">
+            <div>
+                <label for="title">Titre de l'Idée :</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            
+            <div>
+                <label for="description">Description :</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+
+            <div>
+                <label for="category">Catégorie (vidéos longue yt, Blog, etc.) :</label>
+                <input type="text" id="category" name="category" value="YouTube">
+            </div>
+
+            <button type="submit">Enregistrer l'Idée</button>
+        </form>
+    </section>
+
+    <hr>
+
+    <section>
+        <h2>Liste des Idées</h2>
+        
+        <% if (ideas.length === 0) { %>
+            <p>Aucune idée trouvée pour l'instant. Ajoutez-en une pour commencer !</p>
+        <% } else { %>
+            <% ideas.forEach(idea => { %>
+                <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                    <h3><%= idea.title %></h3>
+                    <p><strong>Description:</strong> <%= idea.description %></p>
+                    <p><strong>Statut:</strong> <%= idea.status || 'N/A' %></p>
+                    <p><strong>Date:</strong> <%= new Date(idea.createdAt).toLocaleDateString('fr-FR') %></p>
+                    
+                    <p>
+    <a href="/edit/<%= idea._id %>" style="margin-right: 15px;">
+        <button type="button">Modifier</button>
+    </a>
+    
+    <form action="/idea/delete/<%= idea._id %>" method="POST" style="display:inline;">
+        <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette idée ?');">
+            Supprimer
+        </button>
+    </form>
+</p>
+                </div>
+            <% }) %>
+        <% } %>
+    </section>
+
 </body>
 </html>
