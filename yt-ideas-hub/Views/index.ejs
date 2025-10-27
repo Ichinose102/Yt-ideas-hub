@@ -27,6 +27,11 @@
                 <input type="text" id="category" name="category" value="YouTube">
             </div>
 
+            <div>
+                <label for="channelName">Nom de la Chaîne/Utilisateur YouTube :</label>
+                <input type="text" id="channelName" name="channelName" placeholder="Ex: Squeezie ou MrBeast">
+            </div>
+
             <button type="submit">Enregistrer l'Idée</button>
         </form>
     </section>
@@ -53,13 +58,40 @@
                         <p>
                             <strong>Catégorie:</strong> <%= idea.category || 'N/A' %> | 
                             <strong>Date:</strong> <%= new Date(idea.createdAt).toLocaleDateString('fr-FR') %>
+                            <% if (idea.youtubeChannelId) { %>
+                                <br>
+                                <strong>ID Chaîne:</strong> <%= idea.youtubeChannelId %>
+                            <% } %>
                         </p>
+                        
+                        <% if (idea.youtubeChannelId) { %>
+                            <div style="margin-top: 10px;">
+                                <a href="/dashboard/<%= idea._id %>" class="btn btn-primary">
+                                    📊 Voir le Tableau de Bord de la Chaîne
+                                </a>
+                            </div>
+                        <% } %>
+
+                        <% if (idea.recentVideos && idea.recentVideos.length > 0) { %>
+                            <div class="recent-videos-container">
+                                <h4>Vidéos Récentes (Source YouTube)</h4>
+                                <div class="recent-videos-list">
+                                    <% idea.recentVideos.forEach(video => { %>
+                                        <div class="video-item">
+                                            <a href="https://www.youtube.com/watch?v=<%= video.videoId %>" target="_blank">
+                                                <img src="<%= video.thumbnail %>" alt="<%= video.title %>">
+                                                <p><%= video.title %></p>
+                                            </a>
+                                        </div>
+                                    <% }); %>
+                                </div>
+                            </div>
+                        <% } %>
                         
                         <div class="idea-actions">
                             <a href="/edit/<%= idea._id %>" class="btn btn-edit">
                                 Modifier
                             </a>
-                            
                             <form action="/idea/delete/<%= idea._id %>" method="POST" style="display:inline;">
                                 <button type="submit" class="btn btn-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette idée ?');">
                                     Supprimer

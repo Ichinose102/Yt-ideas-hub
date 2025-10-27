@@ -1,4 +1,7 @@
-/* Style de base pour tout le corps de la page */
+/* ==================================== */
+/* 1. STYLES GLOBAUX ET MISE EN PAGE */
+/* ==================================== */
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
@@ -7,14 +10,18 @@ body {
     line-height: 1.6;
 }
 
-/* Style des titres pour un look plus pro */
 h1 {
-    color: #c0392b; /* Une couleur rouge/brique, typique d'une app */
+    color: #c0392b; /* Rouge/brique */
     border-bottom: 2px solid #ecf0f1;
     padding-bottom: 10px;
 }
 
-/* Style des sections, comme le formulaire ou la liste */
+h4 {
+    color: #34495e;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
 section {
     background-color: #ffffff;
     padding: 20px;
@@ -23,10 +30,12 @@ section {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Style général pour les formulaires */
+/* ==================================== */
+/* 2. FORMULAIRES */
+/* ==================================== */
+
 form div {
     margin-bottom: 15px;
-    /* Utilisation de Flexbox pour aligner la label et le champ */
     display: flex; 
     flex-direction: column;
 }
@@ -41,133 +50,56 @@ label {
 input[type="text"], 
 textarea,
 select {
-    width: 100%; /* Le champ prend toute la largeur du conteneur */
+    width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* S'assure que le padding n'augmente pas la taille totale */
+    box-sizing: border-box;
     font-size: 16px;
 }
 
 textarea {
-    resize: vertical; /* Autoriser l'utilisateur à changer la hauteur */
+    resize: vertical;
     min-height: 100px;
 }
 
-/* Style des boutons pour les rendre plus cliquables et visibles */
 button[type="submit"] {
-    background-color: #5cb85c; /* Vert pour l'action principale (Enregistrer) */
+    background-color: #5cb85c; /* Vert */
     color: white;
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s; /* Petite animation au survol */
+    transition: background-color 0.3s;
 }
 
 button[type="submit"]:hover {
     background-color: #4cae4c;
 }
 
+/* ==================================== */
+/* 3. GRILLE ET CARTES D'IDÉE */
+/* ==================================== */
 
-
-/* Style général pour le badge de statut */
-.status-badge {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 12px; /* Pour un look de "badge" */
-    font-weight: bold;
-    font-size: 0.85em;
-    text-transform: uppercase;
-    margin-left: 5px;
-}
-
-/* 1. Statut Brouillon (Draft) - Couleur neutre/gris */
-.status-Draft {
-    background-color: #bdc3c7; /* Gris clair */
-    color: #2c3e50; /* Texte foncé */
-}
-
-/* 2. Statut En Cours (In Progress) - Couleur d'alerte/jaune */
-.status-InProgress {
-    background-color: #f1c40f; /* Jaune/Ambre */
-    color: #000000;
-}
-
-/* 3. Statut Publié (Published) - Couleur de succès/vert */
-.status-Published {
-    background-color: #27ae60; /* Vert émeraude */
-    color: white;
-}
-
-
-/* 1. Conteneur des actions : utilise Flexbox pour aligner horizontalement */
-.idea-actions {
-    display: flex;
-    gap: 10px; /* Ajoute un espace entre les boutons */
-    margin-top: 15px; /* Sépare les boutons du contenu de l'idée */
-}
-
-/* 2. Style de base pour tous les boutons d'action (lien ou soumission) */
-.btn {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    text-decoration: none; /* Enlève le soulignement sur le lien <a> */
-    display: inline-block;
-    transition: background-color 0.2s;
-}
-
-/* 3. Style spécifique pour le bouton Modifier (vert ou bleu, par exemple) */
-.btn-edit {
-    background-color: #3498db; /* Bleu */
-    color: white;
-}
-
-.btn-edit:hover {
-    background-color: #2980b9;
-}
-
-/* 4. Style spécifique pour le bouton Supprimer (rouge pour l'alerte) */
-.btn-delete {
-    background-color: #e74c3c; /* Rouge */
-    color: white;
-}
-
-.btn-delete:hover {
-    background-color: #c0392b;
-}
-
-/* 5. S'assurer que le formulaire ne brise pas l'alignement flex */
-.idea-actions form {
-    margin: 0;
-    padding: 0;
-}
-
-
-/* 1. Style pour la Grille (pour un affichage en colonnes) */
 .ideas-grid {
     display: grid;
-    /* Crée des colonnes qui ne font jamais moins de 300px de large */
+    /* Crée des colonnes responsives */
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px; /* Espace entre les cartes */
+    gap: 20px;
 }
 
-/* 2. Style de la carte individuelle (remplace le style inline précédent) */
 .idea-card {
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Ombre légère pour effet de profondeur */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s;
 }
 
 .idea-card:hover {
-    transform: translateY(-3px); /* Effet au survol pour montrer l'interactivité */
+    transform: translateY(-3px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -178,3 +110,136 @@ button[type="submit"]:hover {
     border-bottom: 1px dashed #eee;
     padding-bottom: 5px;
 }
+
+/* ==================================== */
+/* 4. BADGES DE STATUT */
+/* ==================================== */
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    margin-left: 5px;
+}
+
+.status-Draft {
+    background-color: #bdc3c7; 
+    color: #2c3e50;
+}
+
+.status-InProgress {
+    background-color: #f1c40f;
+    color: #000000;
+}
+
+.status-Published {
+    background-color: #27ae60;
+    color: white;
+}
+
+/* ==================================== */
+/* 5. BOUTONS D'ACTION */
+/* ==================================== */
+
+.idea-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.2s;
+}
+
+.btn-edit {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #2980b9;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
+}
+
+.idea-actions form {
+    margin: 0;
+    padding: 0;
+}
+
+/* ==================================== */
+/* 6. VIDÉOS RÉCENTES (API YOUTUBE) */
+/* ==================================== */
+
+.recent-videos-container {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.recent-videos-list {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto; /* Permet le défilement horizontal */
+    padding-bottom: 5px;
+}
+
+.video-item {
+    flex-shrink: 0; 
+    width: 100px;
+    text-align: center;
+}
+
+.video-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.video-item a {
+    text-decoration: none;
+    color: #333;
+    font-size: 0.75em;
+    display: block;
+}
+
+.video-item p {
+    margin-top: 5px;
+    line-height: 1.2;
+    overflow: hidden;
+    max-height: 2.4em; /* Limite à deux lignes pour le titre */
+}
+
+
+/* ... (tout le code CSS précédent) ... */
+
+/* --- Style pour le bouton principal du dashboard --- */
+.btn-primary {
+    background-color: #007bff; /* Bleu plus vif */
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* ... (le reste du CSS) ... */
