@@ -84,7 +84,6 @@ button[type="submit"]:hover {
 
 .ideas-grid {
     display: grid;
-    /* Crée des colonnes responsives */
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
@@ -179,13 +178,24 @@ button[type="submit"]:hover {
     background-color: #c0392b;
 }
 
+.btn-primary {
+    background-color: #007bff; /* Bleu plus vif pour le Dashboard */
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
 .idea-actions form {
     margin: 0;
     padding: 0;
 }
 
 /* ==================================== */
-/* 6. VIDÉOS RÉCENTES (API YOUTUBE) */
+/* 6. VIDÉOS RÉCENTES (Home & Dashboard) */
 /* ==================================== */
 
 .recent-videos-container {
@@ -197,7 +207,7 @@ button[type="submit"]:hover {
 .recent-videos-list {
     display: flex;
     gap: 10px;
-    overflow-x: auto; /* Permet le défilement horizontal */
+    overflow-x: auto; 
     padding-bottom: 5px;
 }
 
@@ -205,6 +215,11 @@ button[type="submit"]:hover {
     flex-shrink: 0; 
     width: 100px;
     text-align: center;
+}
+
+/* Ajustement pour le dashboard (plus grandes vignettes) */
+.video-dashboard {
+    width: 150px; 
 }
 
 .video-item img {
@@ -224,22 +239,58 @@ button[type="submit"]:hover {
     margin-top: 5px;
     line-height: 1.2;
     overflow: hidden;
-    max-height: 2.4em; /* Limite à deux lignes pour le titre */
+    max-height: 2.4em;
 }
 
+/* ==================================== */
+/* 7. STYLES POUR LE DASHBOARD */
+/* ==================================== */
 
-/* ... (tout le code CSS précédent) ... */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; 
+    gap: 20px;
+    margin-bottom: 30px;
+}
 
-/* --- Style pour le bouton principal du dashboard --- */
-.btn-primary {
-    background-color: #007bff; /* Bleu plus vif */
-    color: white;
+.stat-card {
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa; /* Fond léger pour les cartes de stats */
+}
+
+.stat-card h4 {
+    color: #34495e;
+    margin: 0 0 10px 0;
+}
+
+.stat-number {
+    font-size: 2em;
     font-weight: bold;
-    padding: 10px 15px;
+    color: #c0392b; 
+    margin: 0;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3;
+.stat-channel {
+    grid-column: 1 / 4; 
+    display: flex;
+    align-items: center;
+    text-align: left;
+    background-color: #fff;
+    border: 1px solid #eee;
 }
 
-/* ... (le reste du CSS) ... */
+.stat-channel h3 {
+    margin: 0;
+    font-size: 1.5em;
+    border: none;
+}
+
+.channel-thumbnail {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 15px;
+}

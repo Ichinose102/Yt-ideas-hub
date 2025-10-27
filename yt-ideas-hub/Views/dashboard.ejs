@@ -21,12 +21,55 @@
     </section>
 
     <section>
-        <h2>Tableau de Bord YT</h2>
-        <p>ID de la Chaîne utilisée : <code><%= channelId %></code></p>
-        
-        <div id="channel-stats">
-            <% /* Les données channelStats seront affichées ici */ %>
-        </div>
+        <% if (channelStats && channelStats.subscriberCount) { %>
+            <h2>Tableau de Bord YT pour <%= channelStats.title %></h2>
+
+            <div class="dashboard-grid">
+                <div class="stat-card stat-channel">
+                    <img src="<%= channelStats.thumbnail %>" alt="Vignette de la chaîne" class="channel-thumbnail">
+                    <h3><%= channelStats.title %></h3>
+                    <a href="https://www.youtube.com/channel/<%= channelId %>" target="_blank" style="margin-left: auto;" class="btn btn-edit">
+                        Voir la chaîne
+                    </a>
+                </div>
+
+                <div class="stat-card stat-subscribers">
+                    <h4>Abonnés</h4>
+                    <p class="stat-number"><%= new Intl.NumberFormat('fr-FR').format(channelStats.subscriberCount) %></p>
+                </div>
+                
+                <div class="stat-card stat-views">
+                    <h4>Vues Totales</h4>
+                    <p class="stat-number"><%= new Intl.NumberFormat('fr-FR').format(channelStats.viewCount) %></p>
+                </div>
+
+                <div class="stat-card stat-videos">
+                    <h4>Vidéos Publiées</h4>
+                    <p class="stat-number"><%= new Intl.NumberFormat('fr-FR').format(channelStats.videoCount) %></p>
+                </div>
+            </div>
+        <% } else { %>
+             <h2>Tableau de Bord YT</h2>
+             <p>Impossible de récupérer les statistiques de la chaîne (ID: <code><%= channelId %></code>). Vérifiez que la chaîne existe et que votre clé API est valide.</p>
+        <% } %>
+    </section>
+    
+    <section>
+        <h3>Dernières Vidéos de la Chaîne</h3>
+        <% if (recentVideos && recentVideos.length > 0) { %>
+            <div class="recent-videos-list">
+                <% recentVideos.forEach(video => { %>
+                    <div class="video-item video-dashboard">
+                        <a href="https://www.youtube.com/watch?v=<%= video.videoId %>" target="_blank">
+                            <img src="<%= video.thumbnail %>" alt="<%= video.title %>">
+                            <p><%= video.title %></p>
+                        </a>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p>Aucune vidéo récente trouvée.</p>
+        <% } %>
     </section>
 
 </body>
