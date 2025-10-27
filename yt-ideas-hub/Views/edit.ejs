@@ -5,14 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= pageTitle %></title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .edit-form {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: var(--card-bg-color); /* Utilisation de la variable */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .edit-form label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+        .edit-form button {
+            margin-top: 25px;
+        }
+        /* Style pour le bouton Mode Sombre */
+        #dark-mode-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            color: var(--text-color);
+            margin-left: 15px;
+            transition: color 0.3s;
+        }
+        #dark-mode-toggle:hover {
+            color: var(--primary-color);
+        }
+    </style>
 </head>
-<body>
-    <h1><%= pageTitle %></h1>
+<body class="light-mode">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
+        <h1><%= pageTitle %></h1>
+        <div style="display: flex; align-items: center;">
+            <a href="/" class="btn btn-secondary">
+                ← Annuler
+            </a>
+            <button id="dark-mode-toggle" aria-label="Activer le mode sombre">🌙</button>
+        </div>
+    </div>
 
-    <section>
-        <h2>Modifier l'idée: <%= idea.title %></h2>
-        
+    <section class="edit-form">
         <form action="/edit/update/<%= idea._id %>" method="POST">
+            
             <div>
                 <label for="title">Titre de l'Idée :</label>
                 <input type="text" id="title" name="title" value="<%= idea.title %>" required>
@@ -25,31 +64,59 @@
 
             <div>
                 <label for="category">Catégorie :</label>
-                <input type="text" id="category" name="category" value="<%= idea.category || '' %>">
+                <input type="text" id="category" name="category" value="<%= idea.category %>">
             </div>
 
             <div>
-                <label for="status">Statut actuel :</label>
-                <select id="status" name="status">
-                    <option value="Draft" <%= idea.status === 'Draft' ? 'selected' : '' %>>Brouillon (Draft)</option>
-                    <option value="In Progress" <%= idea.status === 'In Progress' ? 'selected' : '' %>>En Cours (In Progress)</option>
-                    <option value="Published" <%= idea.status === 'Published' ? 'selected' : '' %>>Publiée (Published)</option>
-                    <option value="Archived" <%= idea.status === 'Archived' ? 'selected' : '' %>>Archivée (Archived)</option>
+                <label for="status">Statut :</label>
+                <select id="status" name="status" required>
+                    <% 
+                        const statuses = ['Draft', 'In Progress', 'Published', 'Archived'];
+                        statuses.forEach(s => {
+                            const isSelected = idea.status === s ? 'selected' : '';
+                    %>
+                            <option value="<%= s %>" <%= isSelected %>><%= s %></option>
+                    <%
+                        });
+                    %>
                 </select>
             </div>
-
+            
             <div>
-                <label for="youtubeVideoId">ID de la Vidéo YouTube (après publication) :</label>
-                <input type="text" id="youtubeVideoId" name="youtubeVideoId" 
-                       value="<%= idea.youtubeVideoId || '' %>" 
-                       placeholder="Ex: dQw4w9WgXcQ">
-                <p style="font-size: 0.8em; color: #777;">Laissez vide si non publié. Cet ID servira pour l'analyse spécifique.</p>
+                <label for="youtubeVideoId">ID de la Vidéo YouTube (si publié) :</label>
+                <input type="text" id="youtubeVideoId" name="youtubeVideoId" value="<%= idea.youtubeVideoId || '' %>" placeholder="Ex: dQw4w9WgXcQ">
+                <p style="font-size: 0.8em; color: var(--border-color);">Remplissez ceci lorsque la vidéo est en ligne pour suivre ses stats.</p>
             </div>
 
-            <button type="submit" class="btn-primary">Mettre à jour l'Idée</button>
+            <button type="submit" class="btn-primary">Enregistrer les Modifications</button>
         </form>
-        
-        <p style="margin-top: 20px;"><a href="/" class="btn btn-secondary">Annuler et Retour à la Liste</a></p>
     </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggle = document.getElementById('dark-mode-toggle');
+        const body = document.body;
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme) {
+            body.classList.remove('light-mode', 'dark-mode');
+            body.classList.add(currentTheme);
+            toggle.textContent = currentTheme === 'dark-mode' ? '☀️' : '🌙';
+        } else {
+            body.classList.add('light-mode');
+            toggle.textContent = '🌙';
+        }
+
+        if(toggle) {
+            toggle.addEventListener('click', () => {
+                const newTheme = body.classList.contains('light-mode') ? 'dark-mode' : 'light-mode';
+                body.classList.remove('light-mode', 'dark-mode');
+                body.classList.add(newTheme);
+                localStorage.setItem('theme', newTheme);
+                toggle.textContent = newTheme === 'dark-mode' ? '☀️' : '🌙';
+            });
+        }
+    });
+</script>
 </body>
 </html>

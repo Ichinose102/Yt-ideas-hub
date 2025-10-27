@@ -5,228 +5,387 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= pageTitle %></title>
     <link rel="stylesheet" href="/css/style.css">
+    
     <style>
-        /* Styles pour les cartes d'idées */
-        .ideas-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+        /* Définition des variables de thème */
+        :root {
+            --main-bg-color: #1a1a2e; /* Fond principal sombre */
+            --card-bg-color: #2c2c44; /* Fond des cartes/panneaux */
+            --text-color: #f0f0f0; /* Texte clair */
+            --secondary-color: #cccccc; /* Texte secondaire */
+            --primary-color: #3498db; /* Bleu (boutons principaux) */
+            --border-color: #444466;
         }
-        .idea-card {
-            background-color: #ffffff;
+
+        .light-mode {
+            --main-bg-color: #ffffff;
+            --card-bg-color: #f7f7f7;
+            --text-color: #333333;
+            --secondary-color: #666666;
+            --primary-color: #3498db;
+            --border-color: #dddddd;
+        }
+        
+        body {
+            background-color: var(--main-bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        /* Conteneur du Filtre */
+        .filter-container {
+            background-color: var(--card-bg-color); 
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-left: 5px solid;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .status-Draft { border-color: #f1c40f; } /* Jaune */
-        .status-In-Progress { border-color: #3498db; } /* Bleu */
-        .status-Published { border-color: #2ecc71; } /* Vert */
-        .status-Archived { border-color: #95a5a6; } /* Gris */
-        .card-header {
+
+        .filter-form {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap; 
         }
-        .card-header h3 {
-            margin-top: 0;
-            margin-bottom: 5px;
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
             flex-grow: 1;
         }
-        .status-tag {
+        
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--text-color);
+            font-size: 0.9em;
+        }
+
+        .filter-form input[type="text"], 
+        .filter-form select {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--main-bg-color); 
+            color: var(--text-color);
+            transition: border-color 0.3s;
+            height: 40px; 
+            box-sizing: border-box;
+        }
+
+        .filter-form input[type="text"]:focus, 
+        .filter-form select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        /* Styles des Boutons de Filtrage */
+        .btn-apply, .btn-reset {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            height: 40px; 
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        .btn-apply {
+            background-color: #3498db; 
+            color: white;
+        }
+
+        .btn-apply:hover {
+            background-color: #2980b9; 
+            transform: translateY(-1px);
+        }
+
+        .btn-reset {
+            background-color: #95a5a6; 
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background-color: #7f8c8d; 
+            transform: translateY(-1px);
+        }
+        
+        /* Styles Génériques des Boutons d'Action (CORRIGÉ POUR LE CENTRAGE DU TEXTE) */
+        .btn {
+            display: flex; /* Utiliser flexbox pour le centrage */
+            align-items: center; /* Centrer verticalement */
+            justify-content: center; /* Centrer horizontalement */
+            text-align: center; 
+            padding: 5px 10px; 
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            height: 40px; 
+            box-sizing: border-box;
+            transition: background-color 0.3s;
+            white-space: normal; 
+            line-height: 1.2; /* Améliore l'espacement entre les lignes du texte sur 2 lignes */
+        }
+
+        .btn-primary { background-color: #3498db; color: white; }
+        .btn-secondary { background-color: #f39c12; color: white; }
+        .btn-delete { background-color: #e74c3c; color: white; }
+        .btn-primary:hover { background-color: #2980b9; }
+        .btn-secondary:hover { background-color: #d35400; }
+        .btn-delete:hover { background-color: #c0392b; }
+        
+        /* Cartes d'Idées */
+        .idea-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .idea-card {
+            background-color: var(--card-bg-color);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        .idea-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        /* Styles pour les Statuts */
+        .status-badge {
+            display: inline-block;
             padding: 4px 8px;
             border-radius: 4px;
             font-size: 0.8em;
             font-weight: bold;
-            color: white;
-            white-space: nowrap;
-            margin-left: 10px;
+            margin-bottom: 10px;
         }
-        .status-Draft-color { background-color: #f1c40f; }
-        .status-In-Progress-color { background-color: #3498db; }
-        .status-Published-color { background-color: #2ecc71; }
-        .status-Archived-color { background-color: #95a5a6; }
-        
-        .actions {
-            margin-top: 15px;
+
+        .status-Draft { background-color: #f1c40f; color: #333; }
+        .status-InProgress { background-color: #3498db; color: white; }
+        .status-Published { background-color: #2ecc71; color: white; }
+        .status-Archived { background-color: #95a5a6; color: white; }
+
+        /* Conteneur et proportions des boutons d'action de la carte */
+        .card-actions {
             display: flex;
             gap: 10px;
-        }
-        
-        /* Style pour les miniatures de vidéos */
-        .recent-videos-container {
             margin-top: 15px;
         }
-        .recent-videos-container img {
+
+        /* Tous les éléments dans card-actions prennent la même largeur */
+        .card-actions a,
+        .card-actions form {
+            flex-grow: 1;
+        }
+
+        /* Assurer que le bouton Supprimer prend 100% de l'espace de son formulaire */
+        .card-actions form button {
             width: 100%;
-            height: auto;
-            border-radius: 4px;
-            margin-top: 5px;
+            display: block;
+            height: 40px;
+            line-height: 20px;
         }
-        .videos-grid {
-             display: grid;
-             grid-template-columns: repeat(3, 1fr);
-             gap: 10px;
-             margin-top: 10px;
-        }
-        .video-thumbnail-wrapper {
-            overflow: hidden;
-            border-radius: 4px;
-        }
-        .ia-label {
-            display: inline-block;
-            background-color: #8e44ad;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.75em;
+        
+        /* Message d'absence d'idées */
+        .no-ideas-message {
+            text-align: center;
+            padding: 40px;
+            background-color: var(--card-bg-color);
+            border-radius: 8px;
+            color: #e74c3c;
             font-weight: bold;
-            margin-right: 5px;
         }
     </style>
+    
 </head>
-<body>
-    <h1><%= pageTitle %></h1>
-
+<body class="<%= (typeof userTheme !== 'undefined' && userTheme === 'light') ? 'light-mode' : '' %>"> 
+    
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <p style="font-size: 1.1em; font-weight: bold; color: #34495e;">
+        <p style="font-size: 1.1em; font-weight: bold; color: var(--text-color);">
             Bonjour, <%= username %> !
         </p>
         
-        <a href="/logout" class="btn btn-delete">
-            Se déconnecter
-        </a>
-    </div>
-
-    <p style="margin-bottom: 20px;">
-        <a href="/global-dashboard" class="btn btn-secondary">
-            📈 Retour au Tableau de Bord Global
-        </a>
-    </p>
-
-    <hr>
-    
-    <section style="margin-bottom: 30px;">
-        <h2>Filtrer et Rechercher les Idées</h2>
-        <form action="/" method="GET" style="display: flex; gap: 20px; align-items: flex-end;">
+        <div>
+            <a href="/global-dashboard" class="btn btn-primary" style="margin-right: 10px;">
+                🚀 Tableau de Bord
+            </a>
             
-            <div>
-                <label for="search">Rechercher par Titre/Description :</label>
-                <input type="text" id="search" name="search" value="<%= query.search || '' %>" placeholder="Mot-clé, sujet...">
+            <button id="theme-toggle" class="btn btn-secondary" style="margin-right: 10px; background-color: #7f8c8d;">
+                🌙 Mode Nuit
+            </button>
+
+            <a href="/logout" class="btn btn-delete">
+                Se déconnecter
+            </a>
+        </div>
+    </div>
+    
+    <h1><%= pageTitle %></h1>
+
+    <hr style="border-color: var(--border-color);">
+
+    <section class="filter-container">
+        <h2>Filtrer et Rechercher les Idées</h2>
+        
+        <form method="GET" action="/" class="filter-form">
+            
+            <div class="form-group" style="flex-grow: 2;">
+                <label for="search">Recherche par Titre/Description :</label>
+                <input type="text" id="search" name="search" placeholder="Mot-clé, sujet..." value="<%= query.search || '' %>">
             </div>
 
-            <div>
+            <div class="form-group">
                 <label for="status">Filtrer par Statut :</label>
                 <select id="status" name="status">
                     <option value="">-- Tous les Statuts --</option>
-                    <% 
-                        const statuses = ['Draft', 'In Progress', 'Published', 'Archived'];
-                        statuses.forEach(s => {
-                            // Réaffichage du statut sélectionné précédent
-                            const isSelected = query.status === s ? 'selected' : '';
-                    %>
-                            <option value="<%= s %>" <%= isSelected %>><%= s %></option>
-                    <%
-                        });
-                    %>
+                    <% ['Draft', 'In Progress', 'Published', 'Archived'].forEach(s => { %>
+                        <option value="<%= s %>" <%= query.status === s ? 'selected' : '' %>>
+                            <%= s %>
+                        </option>
+                    <% }); %>
                 </select>
             </div>
             
-            <button type="submit" class="btn-primary" style="margin-top: 0;">Appliquer les Filtres</button>
-            <a href="/" class="btn btn-secondary" style="margin-top: 0;">Réinitialiser</a>
+            <div style="display: flex; gap: 10px; margin-bottom: 0; min-width: 250px;">
+                
+                <button type="submit" class="btn-apply" style="flex-grow: 1; height: 40px;">
+                    Appliquer les Filtres
+                </button>
+                
+                <a href="/" class="btn-reset" style="flex-grow: 1; text-align: center; display: flex; align-items: center; justify-content: center;">
+                    Réinitialiser
+                </a>
+            </div>
         </form>
     </section>
 
-    <hr>
+    <hr style="border-color: var(--border-color);">
 
-    <section>
-        <h2>Ajouter une Nouvelle Idée Manuelle</h2>
+    <section class="filter-container">
+        <h2>Ajouter une Nouvelle Idée</h2>
         <form action="/idea" method="POST">
-            <div>
-                <label for="title">Titre de l'Idée :</label>
-                <input type="text" id="title" name="title" required>
+            <div style="margin-bottom: 15px;">
+                <label for="title" style="display: block; margin-bottom: 5px; font-weight: bold;">Titre de l'Idée :</label>
+                <input type="text" id="title" name="title" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background-color: var(--main-bg-color); color: var(--text-color);">
             </div>
             
-            <div>
-                <label for="description">Description :</label>
-                <textarea id="description" name="description" required></textarea>
+            <div style="margin-bottom: 15px;">
+                <label for="description" style="display: block; margin-bottom: 5px; font-weight: bold;">Description :</label>
+                <textarea id="description" name="description" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background-color: var(--main-bg-color); color: var(--text-color);"></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+                <div style="flex-grow: 1;">
+                    <label for="category" style="display: block; margin-bottom: 5px; font-weight: bold;">Catégorie (Blog/YouTube, etc.) :</label>
+                    <input type="text" id="category" name="category" value="YouTube" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background-color: var(--main-bg-color); color: var(--text-color);">
+                </div>
+                <div style="flex-grow: 1;">
+                    <label for="channelName" style="display: block; margin-bottom: 5px; font-weight: bold;">Chaîne concurrente (optionnel) :</label>
+                    <input type="text" id="channelName" name="channelName" placeholder="Nom de la chaîne YouTube" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background-color: var(--main-bg-color); color: var(--text-color);">
+                </div>
             </div>
 
-            <div>
-                <label for="category">Catégorie :</label>
-                <input type="text" id="category" name="category" placeholder="Ex: YouTube, Blog, TikTok">
-            </div>
-
-            <div>
-                <label for="channelName">Nom de la Chaîne YouTube à analyser (si pertinent) :</label>
-                <input type="text" id="channelName" name="channelName" placeholder="Ex: MrBeast (Ne mettez que le nom)">
-                <p style="font-size: 0.8em; color: #777;">Utilisé pour récupérer l'ID de la chaîne.</p>
-            </div>
-
-            <button type="submit" class="btn-primary">Enregistrer l'Idée</button>
+            <button type="submit" class="btn btn-primary" style="background-color: #2ecc71;">
+                Ajouter l'Idée
+            </button>
         </form>
     </section>
 
-    <hr>
+    <hr style="border-color: var(--border-color);">
 
     <section>
         <h2>Liste de Vos Idées (<%= ideas.length %>)</h2>
-        <div class="ideas-grid">
-            <% if (ideas.length === 0) { %>
-                <p style="grid-column: 1 / -1; text-align: center; color: #c0392b;">
-                    Aucune idée trouvée correspondant à vos critères. Essayez de réinitialiser les filtres.
-                </p>
-            <% } %>
 
-            <% ideas.forEach(idea => { 
-                const statusClass = 'status-' + idea.status.replace(/\s/g, ''); 
-                const statusColorClass = 'status-' + idea.status.replace(/\s/g, '') + '-color';
-            %>
-                <div class="idea-card <%= statusClass %>">
-                    <div class="card-header">
-                        <h3>
-                            <% if (idea.isAIGenerated) { %>
-                                <span class="ia-label">IA</span>
-                            <% } %>
-                            <%= idea.title %>
-                        </h3>
-                        <span class="status-tag <%= statusColorClass %>"><%= idea.status %></span>
-                    </div>
-                    <p style="font-style: italic; color: #777; font-size: 0.9em;">Catégorie: <%= idea.category || 'Non spécifiée' %></p>
-                    <p><%= idea.description.substring(0, 100) %><% if (idea.description.length > 100) { %>...<% } %></p>
-                    
-                    <% if (idea.youtubeChannelId) { %>
-                        <div class="recent-videos-container">
-                             <p style="font-weight: bold; color: #c0392b;">Analyse YouTube associée</p>
-                            
-                            <div class="videos-grid">
-                                <% idea.recentVideos.forEach(video => { %>
-                                    <div class="video-thumbnail-wrapper">
-                                        <a href="https://www.youtube.com/watch?v=<%= video.videoId %>" target="_blank" title="<%= video.title %>">
-                                            <img src="<%= video.thumbnail %>" alt="Miniature vidéo">
-                                        </a>
-                                    </div>
-                                <% }); %>
-                            </div>
-                            <p style="margin-top: 10px;">
-                                <a href="/dashboard/<%= idea._id %>" class="btn btn-secondary">
-                                    Voir le Tableau de Bord de la Chaîne
-                                </a>
-                            </p>
-                        </div>
-                    <% } %>
-
-                    <div class="actions">
-                        <a href="/edit/<%= idea._id %>" class="btn btn-primary">Modifier</a>
+        <% if (ideas.length > 0) { %>
+            <div class="idea-grid">
+                <% ideas.forEach(idea => { %>
+                    <div class="idea-card">
+                        <% const statusClass = 'status-' + (idea.status || 'Draft').replace(/\s/g, ''); %>
+                        <span class="status-badge <%= statusClass %>">
+                            <%= idea.status || 'Draft' %>
+                        </span>
                         
-                        <form action="/idea/delete/<%= idea._id %>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette idée ?');">
-                            <button type="submit" class="btn btn-delete">Supprimer</button>
-                        </form>
+                        <h3><%= idea.title %></h3>
+                        
+                        <p style="color: var(--secondary-color); font-size: 0.9em; margin-bottom: 15px;">
+                            Catégorie : <%= idea.category || 'Général' %>
+                        </p>
+                        
+                        <p><%= idea.description.substring(0, 150) %>...</p>
+
+                        <% if (idea.recentVideos && idea.recentVideos.length > 0) { %>
+                            <h4 style="margin-top: 20px; color: #f39c12; font-size: 1em;">
+                                👁️ Dernières vidéos du concurrent
+                            </h4>
+                            <ul style="list-style-type: none; padding: 0;">
+                                <% idea.recentVideos.forEach(video => { %>
+                                    <li style="margin-bottom: 5px; font-size: 0.9em; display: flex; align-items: center;">
+                                        <img src="<%= video.thumbnail %>" alt="Miniature" style="width: 40px; height: 30px; object-fit: cover; margin-right: 10px; border-radius: 3px;">
+                                        <a href="https://www.youtube.com/watch?v=<%= video.videoId %>" target="_blank" style="color: var(--primary-color); text-decoration: none;">
+                                            <%= video.title.substring(0, 40) %>...
+                                        </a>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        <% } %>
+                        
+                        <div class="card-actions">
+                            <a href="/dashboard/<%= idea._id %>" class="btn btn-primary">
+                                Analyse détaillée
+                            </a>
+                            <a href="/edit/<%= idea._id %>" class="btn btn-secondary">
+                                Modifier
+                            </a>
+                            <form action="/idea/delete/<%= idea._id %>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette idée ?');">
+                                <button type="submit" class="btn btn-delete">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            <% }); %>
-        </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p class="no-ideas-message">
+                Aucune idée trouvée correspondant à vos critères. Essayez de réinitialiser les filtres.
+            </p>
+        <% } %>
     </section>
+
+    <script>
+        const body = document.body;
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeKey = 'userTheme';
+
+        function updateTheme(theme) {
+            if (theme === 'light') {
+                body.classList.add('light-mode');
+                themeToggle.textContent = '🌙 Mode Nuit';
+            } else {
+                body.classList.remove('light-mode');
+                themeToggle.textContent = '☀️ Mode Jour';
+            }
+        }
+
+        const savedTheme = localStorage.getItem(themeKey) || 'dark';
+        updateTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.classList.contains('light-mode') ? 'light' : 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            localStorage.setItem(themeKey, newTheme);
+            updateTheme(newTheme);
+        });
+    </script>
 </body>
 </html>

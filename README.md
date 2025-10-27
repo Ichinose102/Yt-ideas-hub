@@ -1,50 +1,43 @@
-# YT-Ideas-Hub 💡
+# YT Ideas Hub 💡 - Gestion et Brainstorming d'Idées Vidéo
 
-## Description du Projet
-YT-Ideas-Hub est une application web simple et minimaliste conçue pour gérer et organiser des idées de contenu (pour YouTube, un blog, ou tout autre projet). C'est une application Full-Stack complète (CRUD) développée dans un environnement Node.js.
+## Vue d'ensemble
 
-## Stack Technique
-* **Backend & Serveur :** Node.js & Express
-* **Base de Données :** NeDB (Base de données simple basée sur fichier, parfaite pour les prototypes locaux)
-* **Templating (Frontend) :** EJS (Embedded JavaScript)
-* **Développement :** Nodemon (pour le rechargement automatique)
+**YT Ideas Hub** est une application web auto-hébergeable conçue pour les créateurs de contenu YouTube qui cherchent à centraliser, organiser et analyser leurs idées de vidéos.
 
-## Fonctionnalités Implémentées (CRUD)
-L'application permet d'effectuer les quatre opérations fondamentales :
+Fini les listes dispersées ! Ce tableau de bord unique vous permet de gérer tout le cycle de vie de vos concepts, du simple **brouillon** à la **vidéo publiée**.
 
-| Opération | Méthode & Route | Description |
-| :--- | :--- | :--- |
-| **Créer** | `POST /idea` | Ajout d'une nouvelle idée à la base de données. |
-| **Lire** | `GET /` | Affichage de toutes les idées dans une grille. |
-| **Modifier** | `GET /edit/:id` & `POST /edit/update/:id` | Affichage d'un formulaire pré-rempli et mise à jour des données. |
-| **Supprimer** | `POST /idea/delete/:id` | Suppression définitive d'une idée. |
+## Fonctionnalités Clés
 
-## Installation et Lancement
+* **Gestion du Cycle de Vie (CRUD):** Créez, lisez, modifiez et supprimez vos idées avec des statuts clairs (`Draft`, `In Progress`, `Published`).
+* **Filtrage et Recherche Rapide:** Trouvez instantanément des idées par titre, description ou statut grâce à un système de filtrage performant.
+* **Brainstorming assisté par IA (future feature):** Utilisation d'une API d'IA pour générer de nouvelles idées de contenu basées sur vos sujets favoris.
+* **Suivi des Performances:** Liez vos idées au `youtubeVideoId` correspondant pour un suivi analytique futur (vues, rétention, etc.) directement dans l'application.
+* **Interface Moderne:** Design épuré et professionnel avec support du **Mode Nuit/Jour** pour un confort visuel optimal.
 
-Pour démarrer ce projet sur votre machine locale :
+## Technologies Utilisées
 
-### Prérequis
-Vous devez avoir [Node.js](https://nodejs.org/en/) installé sur votre système.
+* **Backend:** Node.js
+* **Framework:** Express.js
+* **Base de données:** NeDB (simple et rapide pour les projets personnels)
+* **Templating:** EJS (Embedded JavaScript)
+* **Frontend:** HTML/CSS/JavaScript
 
-### Étapes
-1.  **Cloner le Repository**
+## Installation (Local)
+
+1.  **Cloner le dépôt:**
     ```bash
-    git clone [VOTRE LIEN GITHUB ICI]
+    git clone [https://github.com/votre_nom_utilisateur/yt-ideas-hub.git](https://github.com/votre_nom_utilisateur/yt-ideas-hub.git)
     cd yt-ideas-hub
     ```
-
-2.  **Installer les Dépendances**
-    Installe tous les packages nécessaires (Express, NeDB, EJS, nodemon) définis dans `package.json`.
+2.  **Installer les dépendances:**
     ```bash
     npm install
     ```
-
-3.  **Lancer le Serveur**
-    Utilisez le script `dev` pour démarrer le serveur avec `nodemon` (pour le rechargement automatique).
+3.  **Configurer les variables d'environnement:**
+    * Créez un fichier `.env` à la racine.
+    * Ajoutez vos clés API (pour l'IA et/ou YouTube Data API) et vos variables de session/port.
+4.  **Lancer l'application:**
     ```bash
     npm run dev
     ```
-
-4.  **Accéder à l'Application**
-    Ouvrez votre navigateur et naviguez vers :
-    [http://localhost:3000](http://localhost:3000)
+    L'application sera accessible sur `http://localhost:3000` (ou le port défini).

@@ -1,296 +1,168 @@
-/* ==================================== */
-/* 1. STYLES GLOBAUX ET MISE EN PAGE */
-/* ==================================== */
+/* ========================================= */
+/* 1. VARIABLES ET THÈME (NOUVEAU)          */
+/* ========================================= */
+
+/* Défaut : Mode Clair */
+:root {
+    --bg-color: #f4f7f6; /* Arrière-plan général */
+    --main-bg-color: #ecf0f1; /* Arrière-plan du contenu principal */
+    --card-bg-color: #ffffff; /* Arrière-plan des cartes/conteneurs */
+    --text-color: #2c3e50; /* Texte principal (Bleu foncé) */
+    --secondary-color: #c0392b; /* Rouge (accents, liens) */
+    --primary-color: #3498db; /* Bleu (boutons principaux) */
+    --delete-color: #e74c3c; /* Rouge (boutons suppression) */
+    --border-color: #bdc3c7;
+}
+
+/* Mode Sombre */
+body.dark-mode {
+    --bg-color: #1a1a2e; /* Bleu nuit foncé */
+    --main-bg-color: #2c394b; /* Bleu plus clair */
+    --card-bg-color: #1e2738; /* Bleu marine pour les cartes */
+    --text-color: #ecf0f1; /* Texte blanc/gris clair */
+    --secondary-color: #e74c3c; /* Rouge (maintien du contraste) */
+    --primary-color: #3498db; /* Bleu (maintien de la couleur d'action) */
+    --delete-color: #c0392b;
+    --border-color: #3f4a5c;
+}
+
+
+/* ========================================= */
+/* 2. STYLES GÉNÉRAUX ET TYPOGRAPHIE        */
+/* ========================================= */
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
     padding: 20px;
-    line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s; /* Transition fluide */
 }
 
-h1 {
-    color: #c0392b; /* Rouge/brique */
-    border-bottom: 2px solid #ecf0f1;
-    padding-bottom: 10px;
+h1, h2 {
+    color: var(--text-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 5px;
+    margin-top: 40px;
+    transition: color 0.3s;
 }
 
-h4 {
-    color: #34495e;
-    margin-top: 15px;
-    margin-bottom: 5px;
+h3 {
+    color: var(--text-color);
+    transition: color 0.3s;
 }
 
-section {
-    background-color: #ffffff;
-    padding: 20px;
-    margin-bottom: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* Conteneur principal pour le centrage */
+body > div, body > h1, body > p, body > section, body > hr {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* ==================================== */
-/* 2. FORMULAIRES */
-/* ==================================== */
+hr {
+    border-color: var(--border-color);
+    margin: 40px 0;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--secondary-color);
+}
+
+/* ========================================= */
+/* 3. FORMULAIRES ET ÉLÉMENTS D'ENTRÉE      */
+/* ========================================= */
 
 form div {
     margin-bottom: 15px;
-    display: flex; 
-    flex-direction: column;
 }
 
 label {
     display: block;
-    font-weight: bold;
     margin-bottom: 5px;
-    color: #555;
+    font-weight: bold;
+    color: var(--text-color);
 }
 
 input[type="text"], 
+input[type="password"], 
 textarea,
 select {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     box-sizing: border-box;
-    font-size: 16px;
+    background-color: var(--main-bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 textarea {
-    resize: vertical;
     min-height: 100px;
+    resize: vertical;
 }
 
-button[type="submit"] {
-    background-color: #5cb85c; /* Vert */
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-button[type="submit"]:hover {
-    background-color: #4cae4c;
-}
-
-/* ==================================== */
-/* 3. GRILLE ET CARTES D'IDÉE */
-/* ==================================== */
-
-.ideas-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.idea-card {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s;
-}
-
-.idea-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-}
-
-.idea-card h3 {
-    color: #34495e;
-    margin-top: 0;
-    margin-bottom: 10px;
-    border-bottom: 1px dashed #eee;
-    padding-bottom: 5px;
-}
-
-/* ==================================== */
-/* 4. BADGES DE STATUT */
-/* ==================================== */
-
-.status-badge {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-weight: bold;
-    font-size: 0.85em;
-    text-transform: uppercase;
-    margin-left: 5px;
-}
-
-.status-Draft {
-    background-color: #bdc3c7; 
-    color: #2c3e50;
-}
-
-.status-InProgress {
-    background-color: #f1c40f;
-    color: #000000;
-}
-
-.status-Published {
-    background-color: #27ae60;
-    color: white;
-}
-
-/* ==================================== */
-/* 5. BOUTONS D'ACTION */
-/* ==================================== */
-
-.idea-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
+/* ========================================= */
+/* 4. BOUTONS ET ACTIONS                    */
+/* ========================================= */
 
 .btn {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    text-decoration: none;
     display: inline-block;
-    transition: background-color 0.2s;
+    padding: 10px 15px;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    transition: opacity 0.2s, background-color 0.3s;
 }
 
-.btn-edit {
-    background-color: #3498db;
-    color: white;
-}
-
-.btn-edit:hover {
-    background-color: #2980b9;
-}
-
-.btn-delete {
-    background-color: #e74c3c;
-    color: white;
-}
-
-.btn-delete:hover {
-    background-color: #c0392b;
+.btn:hover {
+    opacity: 0.9;
 }
 
 .btn-primary {
-    background-color: #007bff; /* Bleu plus vif pour le Dashboard */
+    background-color: var(--primary-color);
     color: white;
-    font-weight: bold;
-    padding: 10px 15px;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3;
+.btn-secondary {
+    background-color: var(--border-color);
+    color: var(--text-color);
 }
 
-.idea-actions form {
-    margin: 0;
-    padding: 0;
+.btn-delete {
+    background-color: var(--delete-color);
+    color: white;
 }
 
-/* ==================================== */
-/* 6. VIDÉOS RÉCENTES (Home & Dashboard) */
-/* ==================================== */
+/* ========================================= */
+/* 5. PAGES SPÉCIFIQUES (Réutilisé dans EJS)*/
+/* ========================================= */
 
-.recent-videos-container {
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px solid #eee;
-}
-
-.recent-videos-list {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto; 
-    padding-bottom: 5px;
-}
-
-.video-item {
-    flex-shrink: 0; 
-    width: 100px;
-    text-align: center;
-}
-
-/* Ajustement pour le dashboard (plus grandes vignettes) */
-.video-dashboard {
-    width: 150px; 
-}
-
-.video-item img {
-    width: 100%;
-    height: auto;
-    border-radius: 4px;
-}
-
-.video-item a {
-    text-decoration: none;
-    color: #333;
-    font-size: 0.75em;
-    display: block;
-}
-
-.video-item p {
-    margin-top: 5px;
-    line-height: 1.2;
-    overflow: hidden;
-    max-height: 2.4em;
-}
-
-/* ==================================== */
-/* 7. STYLES POUR LE DASHBOARD */
-/* ==================================== */
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr; 
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.stat-card {
-    padding: 20px;
+/* Pour les pages d'auth (login/register) */
+.auth-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: var(--card-bg-color);
     border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #f8f9fa; /* Fond léger pour les cartes de stats */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.stat-card h4 {
-    color: #34495e;
-    margin: 0 0 10px 0;
-}
-
-.stat-number {
-    font-size: 2em;
+.error-message {
+    color: var(--delete-color);
     font-weight: bold;
-    color: #c0392b; 
-    margin: 0;
-}
-
-.stat-channel {
-    grid-column: 1 / 4; 
-    display: flex;
-    align-items: center;
-    text-align: left;
-    background-color: #fff;
-    border: 1px solid #eee;
-}
-
-.stat-channel h3 {
-    margin: 0;
-    font-size: 1.5em;
-    border: none;
-}
-
-.channel-thumbnail {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    margin-right: 15px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid var(--delete-color);
+    border-radius: 4px;
+    background-color: rgba(231, 76, 60, 0.1);
 }

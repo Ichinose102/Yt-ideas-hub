@@ -6,48 +6,83 @@
     <title><%= pageTitle %></title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
-        .login-container {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        /* Style pour le bouton Mode Sombre dans les pages d'auth */
+        #dark-mode-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            color: var(--text-color);
+            margin-left: auto; /* Pousse le bouton à droite */
+            transition: color 0.3s;
+        }
+        #dark-mode-toggle:hover {
+            color: var(--primary-color);
         }
     </style>
 </head>
-<body>
-    <div class="login-container">
-        <h1><%= pageTitle %></h1>
+<body class="light-mode">
+    <div class="auth-container">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0;">Connexion</h2>
+            <button id="dark-mode-toggle" aria-label="Activer le mode sombre">🌙</button>
+        </div>
 
         <% if (error) { %>
-            <p style="color: #e74c3c; font-weight: bold;"><%= error %></p>
+            <p class="error-message"><%= error %></p>
         <% } %>
+
+        <p style="text-align: center;">
+            <a href="/auth/google" class="btn btn-secondary" style="background-color: #db4437; color: white;">
+                Se connecter avec Google
+            </a>
+        </p>
+        <p style="text-align: center; margin: 15px 0;">OU</p>
 
         <form action="/login" method="POST">
             <div>
                 <label for="username">Nom d'utilisateur :</label>
                 <input type="text" id="username" name="username" required>
             </div>
-            
             <div>
                 <label for="password">Mot de passe :</label>
                 <input type="password" id="password" name="password" required>
             </div>
-
-            <button type="submit" class="btn-primary" style="width: 100%;">Se connecter (Local)</button>
+            <button type="submit" class="btn-primary" style="width: 100%;">Se Connecter</button>
         </form>
-
-        <hr style="margin: 20px 0;">
-        <div style="text-align: center;">
-            <a href="/auth/google" class="btn" style="background-color: #db4437; color: white; padding: 10px 15px; display: inline-block; width: 100%; box-sizing: border-box;">
-                🚀 Se connecter avec un compte YouTube/Google
-            </a>
-        </div>
         
         <p style="margin-top: 20px; text-align: center;">
-            Pas encore de compte ? <a href="/register">Inscrivez-vous ici</a>.
+            Pas encore de compte ? 
+            <a href="/register" style="font-weight: bold;">S'inscrire</a>
         </p>
     </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggle = document.getElementById('dark-mode-toggle');
+        const body = document.body;
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme) {
+            body.classList.remove('light-mode', 'dark-mode');
+            body.classList.add(currentTheme);
+            toggle.textContent = currentTheme === 'dark-mode' ? '☀️' : '🌙';
+        } else {
+            body.classList.add('light-mode');
+            toggle.textContent = '🌙';
+        }
+
+        if(toggle) {
+            toggle.addEventListener('click', () => {
+                const newTheme = body.classList.contains('light-mode') ? 'dark-mode' : 'light-mode';
+                body.classList.remove('light-mode', 'dark-mode');
+                body.classList.add(newTheme);
+                localStorage.setItem('theme', newTheme);
+                toggle.textContent = newTheme === 'dark-mode' ? '☀️' : '🌙';
+            });
+        }
+    });
+</script>
 </body>
 </html>

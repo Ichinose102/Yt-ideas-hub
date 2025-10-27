@@ -6,41 +6,83 @@
     <title><%= pageTitle %></title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
-        .login-container {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        /* Style pour le bouton Mode Sombre dans les pages d'auth */
+        #dark-mode-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            color: var(--text-color);
+            margin-left: auto; /* Pousse le bouton à droite */
+            transition: color 0.3s;
+        }
+        #dark-mode-toggle:hover {
+            color: var(--primary-color);
         }
     </style>
 </head>
-<body>
-    <div class="login-container">
-        <h1><%= pageTitle %></h1>
+<body class="light-mode">
+    <div class="auth-container">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0;">Inscription</h2>
+            <button id="dark-mode-toggle" aria-label="Activer le mode sombre">🌙</button>
+        </div>
 
         <% if (error) { %>
-            <p style="color: #e74c3c; font-weight: bold;"><%= error %></p>
+            <p class="error-message"><%= error %></p>
         <% } %>
+
+        <p style="text-align: center;">
+            <a href="/auth/google" class="btn btn-secondary" style="background-color: #db4437; color: white;">
+                S'inscrire avec Google
+            </a>
+        </p>
+        <p style="text-align: center; margin: 15px 0;">OU</p>
 
         <form action="/register" method="POST">
             <div>
                 <label for="username">Choisir un nom d'utilisateur :</label>
                 <input type="text" id="username" name="username" required>
             </div>
-            
             <div>
                 <label for="password">Choisir un mot de passe :</label>
                 <input type="password" id="password" name="password" required>
             </div>
-
-            <button type="submit" class="btn-primary" style="width: 100%;">S'inscrire</button>
+            <button type="submit" class="btn-primary" style="width: 100%;">Créer un Compte Local</button>
         </form>
-
+        
         <p style="margin-top: 20px; text-align: center;">
-            Déjà un compte ? <a href="/login">Connectez-vous ici</a>.
+            Déjà inscrit ? 
+            <a href="/login" style="font-weight: bold;">Se connecter</a>
         </p>
     </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggle = document.getElementById('dark-mode-toggle');
+        const body = document.body;
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme) {
+            body.classList.remove('light-mode', 'dark-mode');
+            body.classList.add(currentTheme);
+            toggle.textContent = currentTheme === 'dark-mode' ? '☀️' : '🌙';
+        } else {
+            body.classList.add('light-mode');
+            toggle.textContent = '🌙';
+        }
+
+        if(toggle) {
+            toggle.addEventListener('click', () => {
+                const newTheme = body.classList.contains('light-mode') ? 'dark-mode' : 'light-mode';
+                body.classList.remove('light-mode', 'dark-mode');
+                body.classList.add(newTheme);
+                localStorage.setItem('theme', newTheme);
+                toggle.textContent = newTheme === 'dark-mode' ? '☀️' : '🌙';
+            });
+        }
+    });
+</script>
 </body>
 </html>

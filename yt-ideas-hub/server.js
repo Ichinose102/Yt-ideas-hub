@@ -340,7 +340,7 @@ app.post('/register', async (req, res) => {
 
 
 // ----------------------------------------------------
-// ROUTE : Tableau de Bord Global
+// ROUTE : Tableau de Bord Global (MISE À JOUR AVEC STATS MONÉTISATION)
 // ----------------------------------------------------
 app.get('/global-dashboard', isAuthenticated, async (req, res) => {
     const currentUserId = getCurrentUserId(req);
@@ -357,28 +357,40 @@ app.get('/global-dashboard', isAuthenticated, async (req, res) => {
             .filter(id => id); 
         const uniqueChannelIds = [...new Set(allChannelIds)];
         
-        // 2. Récupération des statistiques des chaînes
+        // 2. Récupération des statistiques des chaînes (concurrents)
         const channelStatsPromises = uniqueChannelIds.map(channelId => getChannelStatistics(channelId));
         const allChannelStats = await Promise.all(channelStatsPromises); 
         
-        // 3. Comptage des statuts 
+        // 3. Comptage des statuts pour le graphique
         const statusCounts = ideas.reduce((acc, idea) => {
             const status = idea.status || 'Draft';
             acc[status] = (acc[status] || 0) + 1;
             return acc;
         }, {});
         
-        // 4. Récupérer le nom d'utilisateur
+        // 4. Données de votre chaîne (Simulées pour l'exemple) 🎯
+        const subsCurrent = 67;
+        const subsGoal = 1000;
+        const watchTimeCurrent = 4.5;
+        const watchTimeGoal = 4000;
+        
+        // 5. Récupérer le nom d'utilisateur
         usersDb.findOne({ _id: currentUserId }, (err, user) => {
             const username = user ? user.username : 'Utilisateur';
 
-            // 5. Rendu de la vue avec TOUTES les variables nécessaires
+            // 6. Rendu de la vue avec TOUTES les variables nécessaires
             res.render('global-dashboard', { 
                 pageTitle: 'Tableau de Bord Global',
                 username: username,
                 statusCounts: statusCounts,
                 totalIdeas: ideas.length,
-                allChannelStats: allChannelStats, 
+                allChannelStats: allChannelStats,
+                
+                // Variables pour le nouveau bloc de droite (Monétisation)
+                subsCurrent: subsCurrent, 
+                subsGoal: subsGoal,
+                watchTimeCurrent: watchTimeCurrent,
+                watchTimeGoal: watchTimeGoal,
             });
         });
     });

@@ -7,11 +7,13 @@
     <link rel="stylesheet" href="/css/style.css">
     <style>
         .ia-form {
-            background-color: #ffffff;
+            /* Utilisation de la variable CSS pour le fond */
+            background-color: var(--card-bg-color);
             padding: 25px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
+            transition: background-color 0.3s;
         }
         .ia-form label {
             font-weight: bold;
@@ -22,9 +24,11 @@
             width: 100%;
             padding: 10px;
             margin-top: 5px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color); /* Utilisation de la variable */
             border-radius: 4px;
             box-sizing: border-box;
+            background-color: var(--main-bg-color);
+            color: var(--text-color);
         }
         .ia-form button {
             margin-top: 20px;
@@ -37,31 +41,48 @@
             gap: 20px;
         }
         .idea-card {
-            background-color: #f9f9ff; /* Couleur légèrement différente */
+            background-color: var(--main-bg-color); /* Couleur plus claire pour la carte IA */
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             border-left: 5px solid #8e44ad; /* Couleur IA */
+            transition: background-color 0.3s;
         }
         .idea-card h3 {
             color: #8e44ad;
             margin-top: 0;
         }
         .error-message {
-            color: #c0392b; 
+            color: var(--delete-color); 
             font-weight: bold;
+        }
+        /* Style pour le bouton Mode Sombre */
+        #dark-mode-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            color: var(--text-color);
+            margin-left: 15px;
+            transition: color 0.3s;
+        }
+        #dark-mode-toggle:hover {
+            color: var(--primary-color);
         }
     </style>
 </head>
-<body>
-    <h1><%= pageTitle %></h1>
-
-    <p>
-        <a href="/global-dashboard" class="btn btn-secondary">
-            ← Retour au Tableau de Bord
-        </a>
-    </p>
-
+<body class="light-mode">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1><%= pageTitle %></h1>
+        <div style="display: flex; align-items: center;">
+            <a href="/global-dashboard" class="btn btn-secondary">
+                ← Retour au Tableau de Bord
+            </a>
+            <button id="dark-mode-toggle" aria-label="Activer le mode sombre">🌙</button>
+        </div>
+    </div>
+    
     <hr>
     
     <section class="ia-form">
@@ -74,7 +95,7 @@
                        value="<%= inputKeywords %>" 
                        placeholder="Ex: cuisine, vegan, recettes rapides, étudiants" 
                        required>
-                <p style="font-size: 0.8em; color: #777;">
+                <p style="font-size: 0.8em; color: var(--border-color);">
                     Soyez précis pour obtenir les meilleures idées !
                 </p>
             </div>
@@ -121,11 +142,41 @@
                 <% }); %>
             </div>
         <% } else { %>
-            <p style="color: #7f8c8d;">
+            <p style="color: var(--border-color);">
                 Entrez des mots-clés ci-dessus pour générer une liste de titres et de concepts d'idées.
             </p>
         <% } %>
     </section>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- GESTION DU MODE SOMBRE ---
+        const toggle = document.getElementById('dark-mode-toggle');
+        const body = document.body;
+        const currentTheme = localStorage.getItem('theme');
+        
+        // Appliquer le thème sauvegardé au chargement
+        if (currentTheme) {
+            body.classList.remove('light-mode', 'dark-mode');
+            body.classList.add(currentTheme);
+            toggle.textContent = currentTheme === 'dark-mode' ? '☀️' : '🌙';
+        } else {
+            body.classList.add('light-mode');
+            toggle.textContent = '🌙';
+        }
+
+        if(toggle) {
+            toggle.addEventListener('click', () => {
+                const newTheme = body.classList.contains('light-mode') ? 'dark-mode' : 'light-mode';
+                
+                body.classList.remove('light-mode', 'dark-mode');
+                body.classList.add(newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                toggle.textContent = newTheme === 'dark-mode' ? '☀️' : '🌙';
+            });
+        }
+    });
+</script>
 </body>
 </html>
