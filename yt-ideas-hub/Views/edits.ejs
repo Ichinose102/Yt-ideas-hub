@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %></title>
+</head>
+<body>
+    <h1><%= pageTitle %>: <%= idea.title %></h1>
+    
+    <form action="/edit/update/<%= idea._id %>" method="POST">
+        <div>
+            <label for="title">Titre :</label>
+            <input type="text" id="title" name="title" value="<%= idea.title %>" required>
+        </div>
+        
+        <div>
+            <label for="description">Description :</label>
+            <textarea id="description" name="description" required><%= idea.description %></textarea>
+        </div>
+
+        <div>
+            <label for="category">Catégorie :</label>
+            <input type="text" id="category" name="category" value="<%= idea.category %>">
+        </div>
+
+        <div>
+            <label for="status">Statut :</label>
+            <select id="status" name="status">
+                <option value="Draft" <%= idea.status === 'Draft' ? 'selected' : '' %>>Brouillon</option>
+                <option value="In Progress" <%= idea.status === 'In Progress' ? 'selected' : '' %>>En cours</option>
+                <option value="Published" <%= idea.status === 'Published' ? 'selected' : '' %>>Publié</option>
+            </select>
+        </div>
+        
+        <br>
+        <button type="submit">Enregistrer les Modifications</button>
+        <a href="/">Annuler</a>
+    </form>
+
+</body>
+</html>

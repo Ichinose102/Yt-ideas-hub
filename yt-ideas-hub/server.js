@@ -36,6 +36,29 @@ app.get('/', (req, res) => {
     }); 
 });
 
+
+// Route GET pour afficher le formulaire de modification
+app.get('/edit/:id', (req, res) => {
+    // 1. Récupérer l'ID de l'idée depuis l'URL (e.g., /edit/T48G7d...)
+    const ideaId = req.params.id;
+
+    // 2. Chercher l'idée dans la base de données (NeDB)
+    db.findOne({ _id: ideaId }, (err, idea) => {
+        if (err || !idea) {
+            console.error("Erreur ou Idée non trouvée pour modification:", err);
+            // En cas d'erreur ou si l'ID n'existe pas, on renvoie une page 404
+            return res.status(404).send("Idée introuvable.");
+        }
+        
+        // 3. Si l'idée est trouvée, on rend la vue 'edit.ejs'
+        // et on lui passe l'objet 'idea'
+        res.render('edit', { 
+            pageTitle: 'Modifier l\'Idée',
+            idea: idea 
+        });
+    });
+});
+
 // 7. Lancer le Serveur
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
