@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1><%= pageTitle %></h1>
+
+        <% if (error) { %>
+            <p style="color: #e74c3c; font-weight: bold;"><%= error %></p>
+        <% } %>
+
+        <form action="/login" method="POST">
+            <div>
+                <label for="username">Nom d'utilisateur :</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div>
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%;">Se connecter (Local)</button>
+        </form>
+
+        <hr style="margin: 20px 0;">
+        <div style="text-align: center;">
+            <a href="/auth/google" class="btn" style="background-color: #db4437; color: white; padding: 10px 15px; display: inline-block; width: 100%; box-sizing: border-box;">
+                🚀 Se connecter avec un compte YouTube/Google
+            </a>
+        </div>
+        
+        <p style="margin-top: 20px; text-align: center;">
+            Pas encore de compte ? <a href="/register">Inscrivez-vous ici</a>.
+        </p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        .stat-card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-card h3 {
+            margin-top: 0;
+            color: #34495e;
+            font-size: 1em;
+        }
+        .stat-card p {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 0;
+        }
+        /* Couleurs pour les statuts d'idées */
+        .status-Draft { color: #f1c40f; }
+        .status-InProgress { color: #3498db; }
+        .status-Published { color: #2ecc71; }
+        .status-Archived { color: #95a5a6; }
+        .status-default { color: #2c3e50; } 
+
+        /* Style spécifique pour le graphique */
+        .chart-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1><%= pageTitle %></h1>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <p style="font-size: 1.1em; font-weight: bold; color: #34495e;">
+            Bonjour, <%= username %> !
+        </p>
+        <a href="/logout" class="btn btn-delete">
+            Se déconnecter
+        </a>
+    </div>
+
+    <p style="margin-bottom: 20px;">
+        <a href="/brainstorm" class="btn btn-primary" style="background-color: #8e44ad;">
+            ✨ Générateur d'Idées IA
+        </a>
+    </p>
+
+    <hr>
+    
+    <section>
+        <h2>Résumé de vos Idées (<%= totalIdeas %> totales)</h2>
+
+        <div class="stats-grid">
+            
+            <div class="stat-card">
+                <h3>Total des Idées</h3>
+                <p class="status-default"><%= totalIdeas %></p>
+            </div>
+
+            <% Object.keys(statusCounts).forEach(status => { 
+                const statusClass = 'status-' + status.replace(/\s/g, ''); 
+            %>
+                <div class="stat-card">
+                    <h3><%= status %></h3>
+                    <p class="<%= statusClass %>">
+                        <%= statusCounts[status] %>
+                    </p>
+                </div>
+            <% }); %>
+
+        </div>
+        
+        <div class="chart-container">
+            <h3>Distribution des Idées</h3>
+            <canvas id="statusChart"></canvas>
+        </div>
+    </section>
+
+    <hr>
+    
+    <section>
+        <h2>Analyse des Créateurs Suivis</h2>
+
+        <% if (allChannelStats && allChannelStats.length > 0) { %>
+            <div class="stats-grid">
+                <% allChannelStats.forEach(stats => { %>
+                    <div class="stat-card" style="border: 2px solid #c0392b;">
+                        <div style="display: flex; align-items: center; margin-bottom: 10px; justify-content: center;">
+                            <% if(stats.thumbnail) { %>
+                                <img src="<%= stats.thumbnail %>" alt="<%= stats.title %>" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                            <% } %>
+                            <h3 style="font-size: 1.2em; color: #c0392b; margin: 0;">
+                                <%= stats.title || 'Chaîne Inconnue' %>
+                            </h3>
+                        </div>
+                        <p style="font-size: 1.2em; color: #c0392b; margin: 5px 0 0;">
+                            Abonnés : 
+                            <span style="font-weight: bold; color: #2c3e50;">
+                                <%= (stats.subscriberCount || 0).toLocaleString('fr-FR') %>
+                            </span>
+                        </p>
+                        <p style="font-size: 0.9em; color: #7f8c8d;">
+                            Vues Totales : <%= (stats.viewCount || 0).toLocaleString('fr-FR') %>
+                        </p>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p style="color: #7f8c8d;">
+                Ajoutez des idées avec un nom de chaîne YouTube pour commencer à suivre leurs statistiques ici.
+            </p>
+        <% } %>
+    </section>
+
+    <hr>
+    
+    <p>
+        <a href="/" class="btn btn-primary">Voir la Liste Complète des Idées</a>
+    </p>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Récupérer les données de statusCounts passées par EJS
+            const statusData = <%- JSON.stringify(statusCounts) %>;
+            
+            const labels = Object.keys(statusData);
+            const data = Object.values(statusData);
+
+            // Définition des couleurs correspondant aux statuts
+            const backgroundColors = labels.map(label => {
+                switch(label) {
+                    case 'Draft': return '#f1c40f'; // Jaune
+                    case 'In Progress': return '#3498db'; // Bleu
+                    case 'Published': return '#2ecc71'; // Vert
+                    case 'Archived': return '#95a5a6'; // Gris
+                    default: return '#2c3e50';
+                }
+            });
+
+            const ctx = document.getElementById('statusChart');
+
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'doughnut', // Type de graphique en beignet
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Nombre d\'Idées',
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: false,
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -2,42 +2,54 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1><%= pageTitle %>: <%= idea.title %></h1>
-    
-    <form action="/edit/update/<%= idea._id %>" method="POST">
-        <div>
-            <label for="title">Titre :</label>
-            <input type="text" id="title" name="title" value="<%= idea.title %>" required>
-        </div>
+    <h1><%= pageTitle %></h1>
+
+    <section>
+        <h2>Modifier l'idée: <%= idea.title %></h2>
         
-        <div>
-            <label for="description">Description :</label>
-            <textarea id="description" name="description" required><%= idea.description %></textarea>
-        </div>
+        <form action="/edit/update/<%= idea._id %>" method="POST">
+            <div>
+                <label for="title">Titre de l'Idée :</label>
+                <input type="text" id="title" name="title" value="<%= idea.title %>" required>
+            </div>
+            
+            <div>
+                <label for="description">Description :</label>
+                <textarea id="description" name="description" required><%= idea.description %></textarea>
+            </div>
 
-        <div>
-            <label for="category">Catégorie :</label>
-            <input type="text" id="category" name="category" value="<%= idea.category %>">
-        </div>
+            <div>
+                <label for="category">Catégorie :</label>
+                <input type="text" id="category" name="category" value="<%= idea.category || '' %>">
+            </div>
 
-        <div>
-            <label for="status">Statut :</label>
-            <select id="status" name="status">
-                <option value="Draft" <%= idea.status === 'Draft' ? 'selected' : '' %>>Brouillon</option>
-                <option value="In Progress" <%= idea.status === 'In Progress' ? 'selected' : '' %>>En cours</option>
-                <option value="Published" <%= idea.status === 'Published' ? 'selected' : '' %>>Publié</option>
-            </select>
-        </div>
+            <div>
+                <label for="status">Statut actuel :</label>
+                <select id="status" name="status">
+                    <option value="Draft" <%= idea.status === 'Draft' ? 'selected' : '' %>>Brouillon (Draft)</option>
+                    <option value="In Progress" <%= idea.status === 'In Progress' ? 'selected' : '' %>>En Cours (In Progress)</option>
+                    <option value="Published" <%= idea.status === 'Published' ? 'selected' : '' %>>Publiée (Published)</option>
+                    <option value="Archived" <%= idea.status === 'Archived' ? 'selected' : '' %>>Archivée (Archived)</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="youtubeVideoId">ID de la Vidéo YouTube (après publication) :</label>
+                <input type="text" id="youtubeVideoId" name="youtubeVideoId" 
+                       value="<%= idea.youtubeVideoId || '' %>" 
+                       placeholder="Ex: dQw4w9WgXcQ">
+                <p style="font-size: 0.8em; color: #777;">Laissez vide si non publié. Cet ID servira pour l'analyse spécifique.</p>
+            </div>
+
+            <button type="submit" class="btn-primary">Mettre à jour l'Idée</button>
+        </form>
         
-        <br>
-        <button type="submit">Enregistrer les Modifications</button>
-        <a href="/">Annuler</a>
-    </form>
-
+        <p style="margin-top: 20px;"><a href="/" class="btn btn-secondary">Annuler et Retour à la Liste</a></p>
+    </section>
 </body>
 </html>

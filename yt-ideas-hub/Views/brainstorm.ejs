@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .ia-form {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        .ia-form label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+        .ia-form input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .ia-form button {
+            margin-top: 20px;
+        }
+        
+        /* Styles pour l'affichage des idées IA */
+        .ideas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .idea-card {
+            background-color: #f9f9ff; /* Couleur légèrement différente */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #8e44ad; /* Couleur IA */
+        }
+        .idea-card h3 {
+            color: #8e44ad;
+            margin-top: 0;
+        }
+        .error-message {
+            color: #c0392b; 
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1><%= pageTitle %></h1>
+
+    <p>
+        <a href="/global-dashboard" class="btn btn-secondary">
+            ← Retour au Tableau de Bord
+        </a>
+    </p>
+
+    <hr>
+    
+    <section class="ia-form">
+        <h2>Générer de Nouvelles Idées</h2>
+        <form action="/brainstorm" method="POST">
+            
+            <div>
+                <label for="keywords">Mots-clés (séparés par des virgules) :</label>
+                <input type="text" id="keywords" name="keywords" 
+                       value="<%= inputKeywords %>" 
+                       placeholder="Ex: cuisine, vegan, recettes rapides, étudiants" 
+                       required>
+                <p style="font-size: 0.8em; color: #777;">
+                    Soyez précis pour obtenir les meilleures idées !
+                </p>
+            </div>
+
+            <div>
+                <label for="category">Catégorie Cible (optionnel) :</label>
+                <input type="text" id="category" name="category" 
+                       value="<%= inputCategory %>" 
+                       placeholder="Ex: Vidéo YouTube, Article de Blog Tech, Post Instagram">
+            </div>
+
+            <button type="submit" class="btn-primary">🧠 Brainstormer avec Gemini</button>
+        </form>
+    </section>
+
+    <hr>
+
+    <section>
+        <h2>Résultats Générés</h2>
+
+        <% if (results && results.error) { %>
+            <p class="error-message"><%= results.error %></p>
+        <% } else if (results && results.ideas && results.ideas.length > 0) { %>
+            <div class="ideas-grid">
+                <% results.ideas.forEach(idea => { %>
+                    <div class="idea-card">
+                        <h3><%= idea.title %></h3>
+                        <p style="font-style: italic; color: #777; font-size: 0.9em;">
+                            Catégorie suggérée : <%= inputCategory || 'Général' %>
+                        </p>
+                        <p><%= idea.concept %></p>
+                        
+                        <form action="/idea/add-from-ia" method="POST">
+                            <input type="hidden" name="title" value="<%= idea.title %>">
+                            <input type="hidden" name="description" value="<%= idea.concept %>">
+                            <input type="hidden" name="category" value="<%= inputCategory || 'IA Générée' %>">
+                            <input type="hidden" name="isAIGenerated" value="true">
+                            
+                            <button type="submit" class="btn-primary" style="background-color: #8e44ad; margin-top: 10px;">
+                                Ajouter à Mes Idées
+                            </button>
+                        </form>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p style="color: #7f8c8d;">
+                Entrez des mots-clés ci-dessus pour générer une liste de titres et de concepts d'idées.
+            </p>
+        <% } %>
+    </section>
+
+</body>
+</html>

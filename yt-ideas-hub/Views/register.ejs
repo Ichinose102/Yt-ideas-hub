@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1><%= pageTitle %></h1>
+
+        <% if (error) { %>
+            <p style="color: #e74c3c; font-weight: bold;"><%= error %></p>
+        <% } %>
+
+        <form action="/register" method="POST">
+            <div>
+                <label for="username">Choisir un nom d'utilisateur :</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div>
+                <label for="password">Choisir un mot de passe :</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%;">S'inscrire</button>
+        </form>
+
+        <p style="margin-top: 20px; text-align: center;">
+            Déjà un compte ? <a href="/login">Connectez-vous ici</a>.
+        </p>
+    </div>
+</body>
+</html>
